@@ -73,9 +73,9 @@ def main():
         )
         return module.exit_json(msg='Setup cluster successfully', changed=True)
 
-    if module.params['environment'] == 'staging' and (module.params['component'] == 'ingester_master'
-                                                      or module.params['component'] == 'ingester_worker1'
-                                                      or module.params['component'] == 'ingester_worker2'):
+    if module.params['environment'] == 'staging' and (
+                module.params['component'] == 'ingester_master' or module.params['component'] == 'ingester_worker1' or
+            module.params['component'] == 'ingester_worker2'):
         deploy_cluster_with_cluster_failure(
             module.params['environment'], module.params['release_branch']
         )
