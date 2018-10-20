@@ -1,10 +1,6 @@
 #!/usr/bin/python
 
-try:
-    from urllib import quote
-except ImportError:
-    from urllib.parse import quote
-from ansible.module_utils.basic import *
+from ansible.module_utils.basic import AnsibleModule
 import subprocess
 from git import Repo
 
@@ -12,33 +8,42 @@ __author__ = 'rameshtathe'
 
 
 def deploy_cluster_with_kafka_failure(environment, release_branch):
-    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh -e '%s' -c 'kafka' -p 'home/ubuntu/private_key' "
-                    "-s all_services -t install,configure -b '%s'" %
+    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh "
+                    "-e '%s' -c 'kafka' -p 'home/ubuntu/private_key' -s "
+                    "all_services -t install,configure -b '%s'" %
                     (environment, release_branch), shell=True)
-    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh -e '%s' -c 'kafka' -p 'home/ubuntu/private_key' "
-                    "-s kafka -t execute -k 'create_topics' -o 'all' -b '%s'" %
+    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh "
+                    "-e '%s' -c 'kafka' -p 'home/ubuntu/private_key' -s kafka "
+                    "-t execute -k 'create_topics' -o 'all' -b '%s'" %
                     (environment, release_branch), shell=True)
-    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh -e '%s' -c 'ingester_master' -p 'home/ubuntu/private_key' "
+    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh "
+                    "-e '%s' -c 'ingester_master' -p 'home/ubuntu/private_key' "
                     "-s execute_spark_jobs -t execute -j 'all' -b '%s'" %
                     (environment, release_branch), shell=True)
 
 def deploy_cluster_with_cluster_failure(environment, release_branch):
-    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh -e '%s' -c 'ingester_worker1' -p 'home/ubuntu/private_key' "
+    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh "
+                    "-e '%s' -c 'ingester_worker1' -p 'home/ubuntu/private_key' "
                     "-s all_services -t install,configure -b '%s'" %
                     (environment, release_branch), shell=True)
-    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh -e '%s' -c 'ingester_worker2' -p 'home/ubuntu/private_key' "
+    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh "
+                    "-e '%s' -c 'ingester_worker2' -p 'home/ubuntu/private_key' "
                     "-s all_services -t install,configure -b '%s'" %
                     (environment, release_branch), shell=True)
-    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh -e '%s' -c 'ingester_master' -p 'home/ubuntu/private_key' "
+    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh "
+                    "-e '%s' -c 'ingester_master' -p 'home/ubuntu/private_key' "
                     "-s all_services -t install,configure -b '%s'" %
                     (environment, release_branch), shell=True)
-    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh -e '%s' -c 'ingester_master' -p 'home/ubuntu/private_key' "
+    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh "
+                    "-e '%s' -c 'ingester_master' -p 'home/ubuntu/private_key' "
                     "-s deploy_dc_ingester -t stop -b '%s'" %
                     (environment, release_branch), shell=True)
-    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh -e '%s' -c 'ingester_master' -p 'home/ubuntu/private_key' "
+    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh "
+                    "-e '%s' -c 'ingester_master' -p 'home/ubuntu/private_key' "
                     "-s deploy_dc_ingester -t start -b '%s'" %
                     (environment, release_branch), shell=True)
-    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh -e '%s' -c 'ingester_master' -p 'home/ubuntu/private_key' "
+    subprocess.call("/home/ubuntu/ansible-playbooks-opcito/run-playbook.sh "
+                    "-e '%s' -c 'ingester_master' -p 'home/ubuntu/private_key' "
                     "-s execute_spark_jobs -t execute -j 'all' -b '%s'" %
                     (environment, release_branch), shell=True)
 
