@@ -58,11 +58,7 @@ def main():
         supports_check_mode=True,
     )
 
-    clone_repository(
-        module.params['ansible_repo_url'],
-        module.params['bitbucket_username'],
-        module.params['bitbucket_password']
-    )
+    clone_repository(module.params['ansible_repo_url'])
     if module.params['environment'] == 'staging' and \
                     module.params['component'] == 'kafka':
         deploy_cluster_with_kafka_failure(
